@@ -132,7 +132,7 @@ import java.util.concurrent.TimeUnit;
      }
 
      private void startPhoneNumberVerification() {
-         PhoneAuthProvider.getInstance().verifyPhoneNumber(
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
                  mPhoneNumber.getText().toString(), //phone number
                  60, //time user has to input code
                  TimeUnit.SECONDS,

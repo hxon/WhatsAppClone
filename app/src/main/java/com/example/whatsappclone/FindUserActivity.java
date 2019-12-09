@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
-import android.widget.LinearLayout;
 
-import com.example.whatsappclone.model.UserObject;
+import com.example.whatsappclone.user.UserListAdapter;
+import com.example.whatsappclone.user.UserObject;
 import com.example.whatsappclone.util.CountryToPhonePrefix;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,7 +61,7 @@ public class FindUserActivity extends AppCompatActivity {
                 phone = ISOPrefix + phone;
             }
 
-            UserObject mContact = new UserObject(name, phone);
+            UserObject mContact = new UserObject("", name, phone);
             contactList.add(mContact);
             getUserDetails(mContact);
         }
@@ -86,7 +85,16 @@ public class FindUserActivity extends AppCompatActivity {
                             name = childSnapshot.child("name").getValue().toString();
                         }
 
-                        UserObject mUser = new UserObject(name, phone);
+                        UserObject mUser = new UserObject(childSnapshot.getKey(), name, phone);
+
+                        if (name.equals(phone)) {
+                            for (UserObject mContactIterator : contactList) {
+                                if (mContactIterator.getPhone().equals(mUser.getPhone())) {
+                                    mUser.setName(mContactIterator.getName());
+                                }
+                            }
+                        }
+
                         userList.add(mUser);
                         mUserListAdapter.notifyDataSetChanged();
                         return;
