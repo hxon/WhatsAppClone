@@ -13,9 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.whatsappclone.ChatActivity;
 import com.example.whatsappclone.R;
-import com.example.whatsappclone.user.UserListAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 

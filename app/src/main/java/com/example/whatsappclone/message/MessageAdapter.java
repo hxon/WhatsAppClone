@@ -1,6 +1,8 @@
 package com.example.whatsappclone.message;
 
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MessageViewHolder holder, final int position) {
         holder.mMessage.setText(messageList.get(position).getText());
         holder.mSender.setText(messageList.get(position).getSenderId());
         holder.mLayout.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         private MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            mLayout = itemView.findViewById(R.id.chatLayout);
+            mLayout = itemView.findViewById(R.id.layout);
             mMessage = itemView.findViewById(R.id.message);
             mSender = itemView.findViewById(R.id.sender);
         }
