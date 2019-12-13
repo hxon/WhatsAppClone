@@ -1,5 +1,7 @@
 package com.example.whatsappclone.user;
 
+import java.util.Objects;
+
 public class UserObject {
 
     private String uid, name, phone;

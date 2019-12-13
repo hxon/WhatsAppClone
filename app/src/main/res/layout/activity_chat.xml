@@ -28,7 +28,7 @@
             android:layout_weight="0.2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Send media"
+            android:text="Send"
             android:id="@+id/send"
             />
     </androidx.appcompat.widget.LinearLayoutCompat>

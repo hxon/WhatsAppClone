@@ -43,7 +43,6 @@ public class ChatActivity extends AppCompatActivity {
         chatId = getIntent().getExtras().getString("chatId");
 
         dbReference = FirebaseDatabase.getInstance().getReference().child("chat").child(chatId);
-
         Button mSend = findViewById(R.id.send);
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +65,11 @@ public class ChatActivity extends AppCompatActivity {
                     String creatorId = "";
 
                     if (dataSnapshot.child("text").getValue() != null) {
-                        text = dataSnapshot.child("text").getValue().toString();
+                        text = dataSnapshot.child("text").getValue().toString().trim();
                         creatorId = dataSnapshot.child("creator").getValue().toString();
+                        if (FirebaseAuth.getInstance().getUid().equals(creatorId)) {
+                            creatorId = "You";
+                        }
                     }
 
                     Message message = new Message(dataSnapshot.getKey(), text, creatorId);

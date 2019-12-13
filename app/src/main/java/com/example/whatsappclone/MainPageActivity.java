@@ -34,11 +34,15 @@ public class MainPageActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mChatListLayoutManager;
     private ArrayList<Chat> chatList = new ArrayList<>();
 
+    private Chat mChat;
+    private ArrayList<String> chats = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
 
         mLogout = findViewById(R.id.logout);
         mFindUser = findViewById(R.id.findUser);
@@ -69,15 +73,22 @@ public class MainPageActivity extends AppCompatActivity {
         getUserChatList();
     }
 
+
+
     private void getUserChatList() {
         DatabaseReference mUserChatDB = FirebaseDatabase.getInstance().getReference().child("user").child(FirebaseAuth.getInstance().getUid()).child("chat");
-
         mUserChatDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                        Chat mChat = new Chat(childSnapshot.getKey());
+
+                        if (childSnapshot.getValue(String.class).equals("Empty")) {
+                            mChat = new Chat(childSnapshot.getKey(), "Hmmmm");
+                        } else {
+                            mChat = new Chat(childSnapshot.getKey(), childSnapshot.getValue(String.class));
+                        }
+
                         boolean exist = false;
                         for (Chat mChatIterator : chatList) {
                             if (mChatIterator.getChatId().equals(mChat.getChatId())) {
@@ -87,9 +98,10 @@ public class MainPageActivity extends AppCompatActivity {
                         if (exist) {
                             continue;
                         }
-                        chatList.add(mChat);
-                        mChatListAdapter.notifyDataSetChanged();
 
+                        chats.add(mChat.getChatId());
+//                        mChatListAdapter.notifyDataSetChanged();
+                        getChatTitle(mChat.getChatId());
                     }
                 }
             }
@@ -100,6 +112,34 @@ public class MainPageActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void getChatTitle(final String key) {
+        DatabaseReference usersInChat = FirebaseDatabase.getInstance().getReference().child("chat").child(key).child("users");
+        usersInChat.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                        String phone = childSnapshot.getValue(String.class);
+                        if (!FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(phone)) {
+                            mChat = new Chat(key, phone);
+                        } else {
+                            continue;
+                        }
+                        chatList.add(mChat);
+                        mChatListAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

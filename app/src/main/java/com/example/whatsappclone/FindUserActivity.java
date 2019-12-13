@@ -94,8 +94,14 @@ public class FindUserActivity extends AppCompatActivity {
                                 }
                             }
                         }
-
-                        userList.add(mUser);
+                        for (UserObject user: userList) {
+                            if(!(user.getPhone().equals(mUser.getPhone()))) {
+                                userList.add(mUser);
+                            }
+                        }
+                        if(userList.size() == 0) {
+                            userList.add(mUser);
+                        }
                         mUserListAdapter.notifyDataSetChanged();
                         return;
                     }
